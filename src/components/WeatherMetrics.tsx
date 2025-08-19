@@ -120,6 +120,37 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
           );
         }
 
+        if (metric.title === "UV Index") {
+          return (
+            <div key={metric.title} className="weather-card p-6 row-span-2">
+              <div className="text-weather-text-secondary flex justify-between items-center">
+                <h3>{metric.title}</h3>
+                <Icon />
+              </div>
+              <div className="text-3xl text-weather-text-primary font-light">
+                {metric.value} {metric.unit}
+              </div>
+            </div>
+          );
+        }
+
+        if (metric.title === "Sunrise & Sunset") {
+          return (
+            <div key={metric.title} className="weather-card p-6 row-span-2">
+              <div className="text-weather-text-secondary flex justify-between items-center">
+                <h3>{metric.title}</h3>
+                <Icon />
+              </div>
+              <div className="text-3xl text-weather-text-primary font-light">
+                {metric.value} {metric.unit}
+              </div>
+              <div className="text-3xl text-weather-text-primary font-light">
+                {metric.subtitle}
+              </div>
+            </div>
+          );
+        }
+
         return (
           <div key={metric.title}>
             <div className="flex items-center justify-between mb-4">
@@ -147,14 +178,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
               )}
             </div>
 
-            <div className="relative mt-auto">
-              <div className="w-full h-1 bg-weather-border rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-primary to-primary-glow transition-all duration-500 ease-out"
-                  style={{ width: `${Math.min(metric.progress, 100)}%` }}
-                />
-              </div>
-            </div>
+            <div className="relative mt-auto"></div>
           </div>
         );
       })}
