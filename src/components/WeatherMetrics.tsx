@@ -1,14 +1,6 @@
-import { CurrentWeather, weatherApi } from '@/services/weatherApi';
-import { 
-  Wind, 
-  Eye, 
-  Droplets, 
-  Thermometer, 
-  Sun, 
-  Sunset,
-  Gauge
-} from 'lucide-react';
-import { format } from 'date-fns';
+import { CurrentWeather, weatherApi } from "@/services/weatherApi";
+import { Wind, Eye, Droplets, Thermometer, Sun, Sunset } from "lucide-react";
+import { format } from "date-fns";
 
 interface WeatherMetricsProps {
   weather: CurrentWeather;
@@ -19,7 +11,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
   const uvIndex = weatherApi.calculateUVIndex(weather);
   const sunrise = new Date(weather.sys.sunrise * 1000);
   const sunset = new Date(weather.sys.sunset * 1000);
-  
+
   const metrics = [
     {
       title: "Wind Status",
@@ -33,23 +25,35 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
       title: "UV Index",
       value: uvIndex.toString(),
       unit: "UV",
-      subtitle: uvIndex <= 2 ? "Low" : uvIndex <= 5 ? "Moderate" : uvIndex <= 7 ? "High" : "Very High",
+      subtitle:
+        uvIndex <= 2
+          ? "Low"
+          : uvIndex <= 5
+            ? "Moderate"
+            : uvIndex <= 7
+              ? "High"
+              : "Very High",
       icon: Sun,
       progress: (uvIndex / 11) * 100,
     },
     {
       title: "Sunrise & Sunset",
-      value: format(sunrise, 'h:mm a'),
+      value: format(sunrise, "h:mm a"),
       unit: "",
-      subtitle: format(sunset, 'h:mm a'),
+      subtitle: format(sunset, "h:mm a"),
       icon: Sunset,
-      progress: 75, // Sample progress for sunset
+      progress: 75,
     },
     {
       title: "Humidity",
       value: weather.main.humidity.toString(),
       unit: "%",
-      subtitle: weather.main.humidity > 70 ? "High" : weather.main.humidity > 30 ? "Normal" : "Low",
+      subtitle:
+        weather.main.humidity > 70
+          ? "High"
+          : weather.main.humidity > 30
+            ? "Normal"
+            : "Low",
       icon: Droplets,
       progress: weather.main.humidity,
     },
@@ -57,7 +61,12 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
       title: "Visibility",
       value: `${Math.round(weather.visibility / 1000)}`,
       unit: "km",
-      subtitle: weather.visibility > 8000 ? "Good" : weather.visibility > 5000 ? "Moderate" : "Poor",
+      subtitle:
+        weather.visibility > 8000
+          ? "Good"
+          : weather.visibility > 5000
+            ? "Moderate"
+            : "Poor",
       icon: Eye,
       progress: Math.min((weather.visibility / 10000) * 100, 100),
     },
@@ -65,29 +74,42 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
       title: "Feels Like",
       value: Math.round(weather.main.feels_like).toString(),
       unit: "°C",
-      subtitle: Math.abs(weather.main.feels_like - weather.main.temp) <= 2 ? "Similar to actual" : "Different from actual",
+      subtitle:
+        Math.abs(weather.main.feels_like - weather.main.temp) <= 2
+          ? "Similar to actual"
+          : "Different from actual",
       icon: Thermometer,
-      progress: ((weather.main.feels_like + 20) / 60) * 100, // Normalized progress
+      progress: ((weather.main.feels_like + 20) / 60) * 100,
     },
   ];
 
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${className}`}>
+    <div
+      className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[150px] ${className}`}
+    >
       {metrics.map((metric, index) => {
+        // different layout based on index
+        let cardClass =
+          "weather-card weather-card-hover p-6 flex flex-col justify-between";
+        if (index === 0) {
+          cardClass += " row-span-2";
+        } else if (index === 1) {
+          cardClass += " row-span-2";
+        } else if (index === 2) {
+          cardClass += " row-span-2";
+        }
+
         const Icon = metric.icon;
-        
+
         return (
-          <div 
-            key={metric.title}
-            className="weather-card weather-card-hover p-6"
-          >
+          <div key={metric.title} className={cardClass}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-weather-text-secondary text-sm font-medium">
                 {metric.title}
               </h3>
               <Icon size={20} className="text-weather-text-secondary" />
             </div>
-            
+
             <div className="mb-4">
               <div className="flex items-baseline gap-1">
                 <span className="text-3xl font-light text-weather-text-primary">
@@ -105,11 +127,11 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
                 </div>
               )}
             </div>
-            
+
             {/* Progress Bar */}
-            <div className="relative">
+            <div className="relative mt-auto">
               <div className="w-full h-1 bg-weather-border rounded-full overflow-hidden">
-                <div 
+                <div
                   className="h-full bg-gradient-to-r from-primary to-primary-glow transition-all duration-500 ease-out"
                   style={{ width: `${Math.min(metric.progress, 100)}%` }}
                 />
