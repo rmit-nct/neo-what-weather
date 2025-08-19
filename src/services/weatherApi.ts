@@ -2,7 +2,8 @@ import axios from 'axios';
 
 // Demo mode - set to true to use mock data instead of API calls
 const DEMO_MODE = true;
-const API_KEY = 'your_openweather_api_key_here'; // Replace with your actual API key
+// You can use an environment variable or define your API key directly here
+const API_KEY = process.env.NEXT_PUBLIC_OPEN_WEATHER_API_KEY || ''; // Replace with your actual API key if not using env
 const BASE_URL = 'https://api.openweathermap.org/data/2.5';
 const GEO_URL = 'https://api.openweathermap.org/geo/1.0';
 
