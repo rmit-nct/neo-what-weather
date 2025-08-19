@@ -1,6 +1,8 @@
 import { CurrentWeather, weatherApi } from "@/services/weatherApi";
 import { Wind, Eye, Droplets, Thermometer, Sun, Sunset } from "lucide-react";
-import { format } from "date-fns";
+//library to get time based on timezone
+import { DateTime } from "luxon";
+import tzlookup from "tz-lookup";
 
 interface WeatherMetricsProps {
   weather: CurrentWeather;
@@ -9,8 +11,18 @@ interface WeatherMetricsProps {
 
 const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
   const uvIndex = weatherApi.calculateUVIndex(weather);
-  const sunrise = new Date(weather.sys.sunrise * 1000);
-  const sunset = new Date(weather.sys.sunset * 1000);
+
+  // take IANA timezone name based on coordinates
+  const tzName = tzlookup(weather.coord.lat, weather.coord.lon);
+
+  // time now, sunrise, sunset acording to timezone location
+  const nowLocal = DateTime.fromSeconds(weather.dt, { zone: tzName });
+  const sunriseLocal = DateTime.fromSeconds(weather.sys.sunrise, {
+    zone: tzName,
+  });
+  const sunsetLocal = DateTime.fromSeconds(weather.sys.sunset, {
+    zone: tzName,
+  });
 
   const metrics = [
     {
@@ -20,6 +32,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
       subtitle: `${weather.wind.deg}°`,
       icon: Wind,
       progress: Math.min((weather.wind.speed / 50) * 100, 100),
+      time: nowLocal.toFormat("h:mm a"),
     },
     {
       title: "UV Index",
@@ -38,9 +51,9 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
     },
     {
       title: "Sunrise & Sunset",
-      value: format(sunrise, "h:mm a"),
+      value: sunriseLocal.toFormat("h:mm a"),
       unit: "",
-      subtitle: format(sunset, "h:mm a"),
+      subtitle: sunsetLocal.toFormat("h:mm a"),
       icon: Sunset,
       progress: 75,
     },
@@ -87,22 +100,28 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
     <div
       className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[150px] ${className}`}
     >
-      {metrics.map((metric, index) => {
-        // different layout based on index
-        let cardClass =
-          "weather-card weather-card-hover p-6 flex flex-col justify-between";
-        if (index === 0) {
-          cardClass += " row-span-2";
-        } else if (index === 1) {
-          cardClass += " row-span-2";
-        } else if (index === 2) {
-          cardClass += " row-span-2";
-        }
-
+      {metrics.map((metric) => {
         const Icon = metric.icon;
 
+        if (metric.title === "Wind Status") {
+          return (
+            <div key={metric.title} className="weather-card p-6 row-span-2">
+              <div className="text-weather-text-secondary flex justify-between items-center">
+                <h3>{metric.title}</h3>
+                <Icon />
+              </div>
+              <div className="text-3xl text-weather-text-primary font-light">
+                {metric.value} {metric.unit}
+              </div>
+              <div className="text-3xl text-weather-text-primary font-light">
+                {metric.time}
+              </div>
+            </div>
+          );
+        }
+
         return (
-          <div key={metric.title} className={cardClass}>
+          <div key={metric.title}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-weather-text-secondary text-sm font-medium">
                 {metric.title}
@@ -128,7 +147,6 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
               )}
             </div>
 
-            {/* Progress Bar */}
             <div className="relative mt-auto">
               <div className="w-full h-1 bg-weather-border rounded-full overflow-hidden">
                 <div
