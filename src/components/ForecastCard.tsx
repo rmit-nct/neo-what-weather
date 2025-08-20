@@ -27,10 +27,6 @@ const ForecastCard = ({ forecast, className = "" }: ForecastCardProps) => {
         <h3 className="text-weather-text-primary text-lg font-semibold">
           5 days Forecast
         </h3>
-        <select className="bg-transparent text-weather-text-secondary text-sm border border-weather-border rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-primary/50">
-          <option value="5day">5 day</option>
-          <option value="7day">7 day</option>
-        </select>
       </div>
       
       <div className="space-y-4">
@@ -44,35 +40,35 @@ const ForecastCard = ({ forecast, className = "" }: ForecastCardProps) => {
           return (
             <div 
               key={day.dt}
-              className="flex items-center justify-between py-3 border-b border-weather-border last:border-b-0"
+              className="grid grid-cols-3 items-center py-3 border-b border-weather-border last:border-b-0  "
             >
               {/* Weather Icon and Description */}
-              <div className="flex items-center gap-4 flex-1">
+              <div className="flex items-center gap-2 flex-1">
                 <img 
                   src={iconUrl} 
                   alt={weather.description}
-                  className="w-12 h-12 weather-icon"
+                  className="w-14 h-14 weather-icon"
                 />
                 <div>
-                  <div className="text-weather-text-primary font-medium">
-                    {dayName}
+                  <div className="text-weather-text-primary"
+                  style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" }}>
+                    <span className="text-xl font-semibold">+{Math.round(day.main.temp_max)}°/</span>
+                    <span className="text-sm font-normal text-weather-text-secondary">+{Math.round(day.main.temp_min)}°</span>
                   </div>
-                  <div className="text-weather-text-secondary text-sm">
-                    {dateString}
-                  </div>
+                  
                 </div>
               </div>
               
               {/* Temperature */}
-              <div className="text-right">
-                <div className="text-weather-text-primary font-medium">
-                  +{Math.round(day.main.temp_max)}°/{Math.round(day.main.temp_min)}°
-                </div>
-                <div className="text-weather-text-secondary text-sm capitalize">
-                  {weather.description}
-                </div>
+              
+              <div className="text-center text-weather-text-secondary font-medium text-sm ">
+                {dayName}
+              </div>
+              <div className="text-right text-weather-text-secondary text-sm self-center">
+                {dateString}
               </div>
             </div>
+          
           );
         })}
       </div>
