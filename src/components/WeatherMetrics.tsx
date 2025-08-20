@@ -172,12 +172,19 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
               </div>
 
               {/* Wind speed and Time */}
-              <div className="flex justify-between items-center mt-4">
-                <div className="text-5xl text-weather-text-primary ">
-                  {metric.value}{" "}
-                  <span className="text-2xl font-light"> {metric.unit}</span>
+              <div className="flex justify-between items-baseline mt-4">
+                {/* Value + Unit */}
+                <div className="flex items-baseline">
+                  <span className="text-5xl text-weather-text-primary">
+                    {metric.value}
+                  </span>
+                  <span className="text-2xl text-weather-text-primary font-light ml-1">
+                    {metric.unit}
+                  </span>
                 </div>
-                <div className="text-2xl translate-y-1 text-weather-text-primary font-thin">
+
+                {/* Time */}
+                <div className="text-2xl text-weather-text-primary font-thin">
                   {metric.time}
                 </div>
               </div>
