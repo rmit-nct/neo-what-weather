@@ -1,6 +1,9 @@
 import { CurrentWeather } from '@/services/weatherApi';
-import { MapPin, Clock } from 'lucide-react';
-import { format } from 'date-fns';
+import { MapPin, Clock } from 'lucide-react'
+import { format } from  'date-fns-tz';
+import moment, { unix } from 'moment-timezone';
+import tzlookup from "tz-lookup";
+import {DateTime} from "luxon";
 
 interface WeatherCardProps {
   weather: CurrentWeather;
@@ -15,8 +18,10 @@ const WeatherCard = ({ weather, className = "", width = "100%", maxWidth, varian
   const iconUrl = `https://openweathermap.org/img/wn/${currentWeather.icon}@4x.png`;
   const tall = "flex flex col justify-between gap-6 min-h-[360px]";
   const compact= "flex-items-center justify-between gap-6"
+  const tzName = tzlookup(weather.coord.lat, weather.coord.lon);
+  const nowLocal = DateTime.fromSeconds(weather.dt, {zone: tzName});
   return (
-    <div className="grid grid-cols-3 grid-rows-2 gap-6 ">
+    <div className="grid grid-cols-[1fr_2fr] grid-rows-2 gap-6 ">
       <div className={`weather-card weather-card-hover p-8  w-full${className}`}>
 
 
@@ -55,7 +60,7 @@ const WeatherCard = ({ weather, className = "", width = "100%", maxWidth, varian
           <div className="flex items-center justify-start gap-2 mb-4 pr-20">
             <Clock size={16} className="text-weather-text-secondary" />
             <span className="text-weather-text-secondary">
-              {format(new Date(weather.dt * 1000), 'dd MMM, yyyy h:mm a')}
+              {nowLocal.toFormat("h:mm a")}
             </span>
           </div>
           
