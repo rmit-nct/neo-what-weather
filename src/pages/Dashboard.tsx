@@ -3,8 +3,6 @@ import { useToast } from "@/hooks/use-toast";
 import WeatherSearch from "@/components/WeatherSearch";
 import WeatherCard from "@/components/WeatherCard";
 import WeatherMetrics from "@/components/WeatherMetrics";
-import ForecastCard from "@/components/ForecastCard";
-import WeatherMap from "@/components/WeatherMap";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import {
   weatherApi,
@@ -28,7 +26,6 @@ const Dashboard = () => {
         weatherApi.getCurrentWeather(city),
         weatherApi.getForecast(city),
       ]);
-
       setCurrentWeather(weatherData);
       setForecast(forecastData);
     } catch (error) {
@@ -49,7 +46,7 @@ const Dashboard = () => {
     fetchWeatherData(city);
   };
 
-  // Get user's location and load default weather
+  // Load user location
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -64,14 +61,10 @@ const Dashboard = () => {
             setForecast(forecastData);
             setSelectedCity(`${weatherData.name}, ${weatherData.sys.country}`);
           } catch (error) {
-            // Fallback to default city
             fetchWeatherData(selectedCity);
           }
         },
-        () => {
-          // Geolocation denied, use default city
-          fetchWeatherData(selectedCity);
-        },
+        () => fetchWeatherData(selectedCity),
       );
     } else {
       fetchWeatherData(selectedCity);
@@ -87,30 +80,35 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-weather-bg">
+    <div className="min-h-screen bg-weather-bg text-white">
       <div className="pl-20">
-        {" "}
-        {/* Account for sidebar */}
         <div className="p-8">
           {/* Header with Search */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <div></div>
-              <WeatherSearch onCitySelect={handleCitySelect} className="w-96" />
-            </div>
+          <div className="flex items-center justify-end mb-8">
+            <WeatherSearch onCitySelect={handleCitySelect} className="w-96" />
           </div>
 
           {currentWeather && (
-            <>
-              {/* Main Weather Card */}
-              <div className="mb-8">
+            <div className="grid grid-cols-[1fr_2fr] gap-8">
+              {/* Left: Main Weather Card */}
+              <div>
                 <WeatherCard weather={currentWeather} />
               </div>
 
-            </>
+              {/* Right: Today’s Highlights */}
+              <div>
+                <h2 className="text-xl font-semibold mb-4">
+                  Today's Highlight
+                </h2>
+                <WeatherMetrics
+                  weather={currentWeather}
+                  className="grid grid-cols-2 lg:grid-cols-3 gap-6"
+                />
+              </div>
+            </div>
           )}
 
-          {/* Loading overlay for subsequent searches */}
+          {/* Loading overlay for searches */}
           {isLoading && currentWeather && (
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
               <div className="weather-card p-6">
@@ -125,4 +123,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
