@@ -6,6 +6,7 @@ import { DateTime } from "luxon";
 import tzlookup from "tz-lookup";
 // charts
 import { AreaChart, Area, ResponsiveContainer, Tooltip } from "recharts";
+import { useWindForecast } from "@/hooks/useWindForecast";
 
 interface WeatherMetricsProps {
   weather: CurrentWeather;
@@ -18,6 +19,12 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
   // take IANA timezone name based on coordinates
   const tzName = tzlookup(weather.coord.lat, weather.coord.lon);
 
+  const { windData, loading, error } = useWindForecast(
+    weather.coord.lat,
+    weather.coord.lon,
+    tzName,
+  );
+
   // time now, sunrise, sunset acording to timezone location
   const nowLocal = DateTime.fromSeconds(weather.dt, { zone: tzName });
   const sunriseLocal = DateTime.fromSeconds(weather.sys.sunrise, {
@@ -26,15 +33,6 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
   const sunsetLocal = DateTime.fromSeconds(weather.sys.sunset, {
     zone: tzName,
   });
-
-  // Wind chart
-  const windData = [
-    { time: "1 AM", value: 6.5 },
-    { time: "2 AM", value: 7.2 },
-    { time: "3 AM", value: 7.9 },
-    { time: "4 AM", value: 8.1 },
-    { time: "5 AM", value: 7.5 },
-  ];
 
   const metrics = [
     {
@@ -127,48 +125,57 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
                   {metric.title}
                 </h3>
               </div>
-              {/* Area Chart */}
-              <div className="flex-1">
-                <ResponsiveContainer width="100%" height={100}>
-                  <AreaChart data={windData}>
-                    <defs>
-                      <linearGradient
-                        id="windGradient"
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="1"
-                      >
-                        <stop
-                          offset="5%"
-                          stopColor="#4FC3F7"
-                          stopOpacity={0.8}
-                        />
-                        <stop
-                          offset="95%"
-                          stopColor="#4FC3F7"
-                          stopOpacity={0}
-                        />
-                      </linearGradient>
-                    </defs>
-                    <Area
-                      type="monotone"
-                      dataKey="value"
-                      stroke="#4FC3F7"
-                      strokeWidth={2.5}
-                      fill="url(#windGradient)"
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#1E293B",
-                        borderRadius: "8px",
-                        border: "none",
-                      }}
-                      labelStyle={{ color: "#94A3B8" }}
-                      itemStyle={{ color: "#E2E8F0" }}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
+
+              {/* Chart / Loading / Error */}
+              <div className="flex-1 flex items-center justify-center">
+                {loading ? (
+                  <div className="text-weather-text-secondary">
+                    Loading forecast...
+                  </div>
+                ) : error ? (
+                  <div className="text-red-400">Error: {error}</div>
+                ) : (
+                  <ResponsiveContainer width="100%" height={100}>
+                    <AreaChart data={windData}>
+                      <defs>
+                        <linearGradient
+                          id="windGradient"
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="1"
+                        >
+                          <stop
+                            offset="5%"
+                            stopColor="#4FC3F7"
+                            stopOpacity={0.8}
+                          />
+                          <stop
+                            offset="95%"
+                            stopColor="#4FC3F7"
+                            stopOpacity={0}
+                          />
+                        </linearGradient>
+                      </defs>
+                      <Area
+                        type="monotone"
+                        dataKey="value"
+                        stroke="#4FC3F7"
+                        strokeWidth={2.5}
+                        fill="url(#windGradient)"
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#1E293B",
+                          borderRadius: "8px",
+                          border: "none",
+                        }}
+                        labelStyle={{ color: "#94A3B8" }}
+                        itemStyle={{ color: "#E2E8F0" }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                )}
               </div>
 
               {/* Wind speed and Time */}
