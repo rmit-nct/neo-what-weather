@@ -72,7 +72,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
   ];
 
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${className}`}>
+    <div className={`grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-6 ${className}`}>
       {metrics.map((metric, index) => {
         const Icon = metric.icon;
         
