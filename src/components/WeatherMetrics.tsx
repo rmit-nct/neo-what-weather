@@ -113,24 +113,81 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
 
   return (
     <div className={className}>
-      {metrics.map((metric) => {
+      {metrics.map((metric, idx) => {
         const Icon = metric.icon;
         return (
           <div
             key={metric.title}
-            className="weather-card p-6 bg-weather-card rounded-2xl shadow-lg flex flex-col justify-between min-h-[200px]"
+            className={`weather-card bg-weather-card rounded-2xl shadow-lg flex flex-col justify-between 
+          ${idx < 3 ? "p-6 min-h-[200px]" : "p-4 min-h-[100px]"}`}
           >
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-weather-text-secondary font-medium text-base">
                 {metric.title}
               </h3>
-              <Icon size={20} className="text-weather-text-secondary" />
+              {idx >= 3 && Icon && (
+                <Icon size={20} className="text-weather-text-secondary" />
+              )}
             </div>
 
             {/* Chart / Gauge */}
             {metric.chart ? (
               <div className="flex-1 flex items-center justify-center h-20">
-                {/* chart code same */}
+                {loading ? (
+                  <span className="text-sm text-weather-text-secondary">
+                    Loading...
+                  </span>
+                ) : error ? (
+                  <span className="text-sm text-red-400">
+                    Failed to load wind data
+                  </span>
+                ) : windData && windData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height={50}>
+                    <AreaChart data={windData}>
+                      <defs>
+                        <linearGradient
+                          id="windGradient"
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="1"
+                        >
+                          <stop
+                            offset="5%"
+                            stopColor="#4FC3F7"
+                            stopOpacity={0.8}
+                          />
+                          <stop
+                            offset="95%"
+                            stopColor="#4FC3F7"
+                            stopOpacity={0}
+                          />
+                        </linearGradient>
+                      </defs>
+
+                      <Area
+                        type="monotone"
+                        dataKey="value"
+                        stroke="#4FC3F7"
+                        fill="url(#windGradient)"
+                      />
+
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "#1E293B",
+                          border: "none",
+                          borderRadius: "6px",
+                        }}
+                        labelStyle={{ color: "#94A3B8" }}
+                        itemStyle={{ color: "#E2E8F0" }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <span className="text-sm text-weather-text-secondary">
+                    No wind data
+                  </span>
+                )}
               </div>
             ) : metric.gauge ? (
               <div className="flex-1 flex items-center justify-center h-20">

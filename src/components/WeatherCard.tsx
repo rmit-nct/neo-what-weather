@@ -21,7 +21,7 @@ const WeatherCard = ({
   const currentWeather = weather.weather[0];
   const iconUrl = `https://openweathermap.org/img/wn/${currentWeather.icon}@4x.png`;
 
-  const tall = "flex flex-col justify-between gap-6 min-h-[360px]";
+  const tall = "flex flex-col justify-between gap-6 min-h-[500px]";
   const compact = "flex items-center justify-between gap-6";
 
   const tzName = tzlookup(weather.coord.lat, weather.coord.lon);
