@@ -107,19 +107,6 @@ const Dashboard = () => {
                 <WeatherCard weather={currentWeather} />
               </div>
 
-              {/* Weather Metrics Grid */}
-              <div className="mb-8">
-                <WeatherMetrics weather={currentWeather} />
-              </div>
-
-              {/* Forecast and Map Row */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* 5-Day Forecast */}
-                {forecast && <ForecastCard forecast={forecast.list} />}
-
-                {/* Weather Map */}
-                <WeatherMap />
-              </div>
             </>
           )}
 

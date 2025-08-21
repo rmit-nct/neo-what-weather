@@ -1,53 +1,66 @@
-import { CurrentWeather } from "@/services/weatherApi";
-import { MapPin, Clock } from "lucide-react";
-import { format } from "date-fns";
+import { CurrentWeather } from '@/services/weatherApi';
+import { MapPin, Clock } from 'lucide-react'
+import { format } from  'date-fns-tz';
+import moment, { unix } from 'moment-timezone';
+import tzlookup from "tz-lookup";
+import {DateTime} from "luxon";
 
 interface WeatherCardProps {
   weather: CurrentWeather;
   className?: string;
+  width?: number|string;
+  maxWidth?:number|string;
+  variant?:"compact" | "tall";
 }
 
-const WeatherCard = ({ weather, className = "" }: WeatherCardProps) => {
+const WeatherCard = ({ weather, className = "", width = "100%", maxWidth, variant = "tall" }: WeatherCardProps) => {
   const currentWeather = weather.weather[0];
   const iconUrl = `https://openweathermap.org/img/wn/${currentWeather.icon}@4x.png`;
-
+  const tall = "flex flex col justify-between gap-6 min-h-[360px]";
+  const compact= "flex-items-center justify-between gap-6"
+  const tzName = tzlookup(weather.coord.lat, weather.coord.lon);
+  const nowLocal = DateTime.fromSeconds(weather.dt, {zone: tzName});
   return (
-    <div className={`weather-card weather-card-hover p-8 ${className}`}>
-      <div className="flex items-center gap-6">
-        {/* Weather Icon and Temperature */}
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <img
-              src={iconUrl}
-              alt={currentWeather.description}
-              className="w-24 h-24 weather-icon"
-            />
-            <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-primary/20 animate-pulse"></div>
-          </div>
+    <div className="grid grid-cols-[1fr_2fr] grid-rows-2 gap-6 ">
+      <div className={`weather-card weather-card-hover p-8  w-full${className}`}>
 
-          <div>
-            <div className="text-6xl font-light text-weather-text-primary mb-2">
-              {Math.round(weather.main.temp)}°C
+
+        <div className="flex items-center gap-6 ">
+          {/* Weather Icon and Temperature */}
+          <div className="flex items-center gap-4 w-full pr-20">
+            <div className="relative">
+              <img 
+                src={iconUrl} 
+                alt={currentWeather.description}
+                className="w-24 h-24 weather-icon"
+              />
+              
             </div>
-            <div className="text-weather-text-secondary capitalize text-lg">
-              {currentWeather.description}
+            
+            <div>
+              <div className="text-6xl font-light text-weather-text-primary mb-2">
+                {Math.round(weather.main.temp)}°C
+              </div>
+              <div className="text-weather-text-secondary capitalize text-lg">
+                {currentWeather.description}
+              </div>
             </div>
           </div>
         </div>
 
         {/* Location and Time */}
-        <div className="flex-1 text-right">
-          <div className="flex items-center justify-end gap-2 mb-2">
+        <div className="p-10 text-lg">
+          <div className="flex items-center justify-start gap-2 mb-2">
             <MapPin size={18} className="text-weather-text-secondary" />
             <span className="text-weather-text-primary font-medium text-lg">
               {weather.name}, {weather.sys.country}
             </span>
           </div>
-
-          <div className="flex items-center justify-end gap-2 mb-4">
+          
+          <div className="flex items-center justify-start gap-2 mb-4 pr-20">
             <Clock size={16} className="text-weather-text-secondary" />
             <span className="text-weather-text-secondary">
-              {format(new Date(weather.dt * 1000), "dd MMM, yyyy h:mm a")}
+              {nowLocal.toFormat("h:mm a")}
             </span>
           </div>
 
