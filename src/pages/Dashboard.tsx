@@ -96,7 +96,6 @@ const Dashboard = () => {
                 <WeatherCard weather={currentWeather} />
                 {forecast && <ForecastCard forecast={forecast.list} />}
               </div>
-
               {/* Right Column: Weather Metrics */}
               <div>
                 <WeatherMetrics weather={currentWeather} />
