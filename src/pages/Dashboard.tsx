@@ -81,7 +81,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-weather-bg">
-      <div className="pl-20"> {/* Account for sidebar */}
+      <div className="pl-4"> {/* Account for sidebar */}
         <div className="p-8">
           {/* Header with Search */}
           <div className="mb-8">
@@ -111,14 +111,17 @@ const Dashboard = () => {
               </div>
 
               {/* Forecast and Map Row */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className='lg:col-span-1'>
                 {/* 5-Day Forecast */}
-                {forecast && (
-                  <ForecastCard forecast={forecast.list} />
-                )}
-
-                {/* Weather Map */}
-                <WeatherMap />
+                  {forecast && (
+                    <ForecastCard forecast={forecast.list} />
+                  )}
+                </div>
+                <div className='lg:col-span-2'>
+                  {/* Weather Map */}
+                  <WeatherMap />
+                </div>
               </div>
             </>
           )}
