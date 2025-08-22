@@ -10,7 +10,6 @@ import {
   ForecastResponse,
 } from "@/services/weatherApi";
 import ForecastCard from "@/components/ForecastCard";
-import WeatherMap from "@/components/WeatherMap";
 
 const Dashboard = () => {
   const [currentWeather, setCurrentWeather] = useState<CurrentWeather | null>(
@@ -48,7 +47,7 @@ const Dashboard = () => {
     fetchWeatherData(city);
   };
 
-  // Load user location
+  // Load user location on mount
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -91,28 +90,16 @@ const Dashboard = () => {
           </div>
 
           {currentWeather && (
-            <div className="grid grid-cols-[1fr_2fr] gap-8">
-              {/* Left: Main Weather Card */}
-              <div>
+            <div className="grid gap-6 grid-cols-1 lg:grid-cols-[2fr_3fr] lg:h-[calc(100vh-12rem)]">
+              {/* Left Column: Weather + Forecast */}
+              <div className="flex flex-col gap-6">
                 <WeatherCard weather={currentWeather} />
-              </div>
-              {/* Weather Metrics Grid */}
-              <div className="mb-8">
-                <WeatherMetrics weather={currentWeather} />
+                {forecast && <ForecastCard forecast={forecast.list} />}
               </div>
 
-              {/* Forecast and Map Row */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className='lg:col-span-1'>
-                {/* 5-Day Forecast */}
-                  {forecast && (
-                    <ForecastCard forecast={forecast.list} />
-                  )}
-                </div>
-                <div className='lg:col-span-2'>
-                  {/* Weather Map */}
-                  <WeatherMap />
-                </div>
+              {/* Right Column: Weather Metrics */}
+              <div>
+                <WeatherMetrics weather={currentWeather} />
               </div>
             </div>
           )}
@@ -132,3 +119,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

@@ -112,32 +112,31 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
   ];
 
   return (
-    <div className="border-8 border-grey-500 gap-5 p-5 rounded-lg weather-card-hover">
-      <h2 className="text-xl font-semibold mb-4">
-                  Today's Highlight
-                </h2>
-      <div className={className}>
-        {metrics.map((metric, idx) => {
+    <div
+      className={`p-6 bg-weather-card rounded-2xl shadow-lg h-full flex flex-col ${className}`}
+    >
+      <h2 className="text-xl font-semibold mb-6">Today's Highlight</h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 flex-1">
+        {metrics.map((metric) => {
           const Icon = metric.icon;
           return (
             <div
               key={metric.title}
-              className={`weather-card bg-weather-card rounded-2xl shadow-lg flex flex-col justify-between 
-            ${idx < 3 ? "p-6 min-h-[200px]" : "p-4 min-h-[100px]"}`}
+              className="bg-weather-bg rounded-2xl p-5 flex flex-col justify-between shadow-md"
             >
-              <div className="flex justify-between items-center mb-4">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-4">
                 <h3 className="text-weather-text-secondary font-medium text-base">
                   {metric.title}
                 </h3>
-                {idx >= 3 && Icon && (
-                  <Icon size={20} className="text-weather-text-secondary" />
-                )}
+                <Icon size={20} className="text-weather-text-secondary" />
               </div>
 
               {/* Chart / Gauge */}
-              {metric.chart ? (
-                <div className="flex-1 flex items-center justify-center h-20">
-                  {loading ? (
+              <div className="flex-1 flex items-center justify-center">
+                {metric.chart ? (
+                  loading ? (
                     <span className="text-sm text-weather-text-secondary">
                       Loading...
                     </span>
@@ -146,7 +145,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
                       Failed to load wind data
                     </span>
                   ) : windData && windData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={50}>
+                    <ResponsiveContainer width="100%" height={60}>
                       <AreaChart data={windData}>
                         <defs>
                           <linearGradient
@@ -168,14 +167,12 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
                             />
                           </linearGradient>
                         </defs>
-
                         <Area
                           type="monotone"
                           dataKey="value"
                           stroke="#4FC3F7"
                           fill="url(#windGradient)"
                         />
-
                         <Tooltip
                           contentStyle={{
                             backgroundColor: "#1E293B",
@@ -191,10 +188,8 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
                     <span className="text-sm text-weather-text-secondary">
                       No wind data
                     </span>
-                  )}
-                </div>
-              ) : metric.gauge ? (
-                <div className="flex-1 flex items-center justify-center h-20">
+                  )
+                ) : metric.gauge ? (
                   <Suspense fallback={<span>Loading gauge...</span>}>
                     <GaugeChart
                       id={`${metric.title}-gauge`}
@@ -207,12 +202,12 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
                       formatTextValue={() => metric.value.toString()}
                     />
                   </Suspense>
-                </div>
-              ) : null}
+                ) : null}
+              </div>
 
               {/* Value */}
-              <div className="mt-4 flex justify-between items-baseline">
-                <span className="text-3xl font-semibold text-weather-text-primary">
+              <div className="mt-4 flex items-baseline justify-between">
+                <span className="text-2xl font-semibold text-weather-text-primary">
                   {metric.value}
                   {metric.unit && (
                     <span className="text-base font-light ml-1">
@@ -226,10 +221,10 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
                   </span>
                 )}
               </div>
-          </div>
-        );
-      })}
-    </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
