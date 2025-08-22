@@ -22,14 +22,11 @@ const ForecastCard = ({ forecast, className = "" }: ForecastCardProps) => {
   }, []).slice(0, 5);
 
   return (
-    <div className={`weather-card weather-card-hover p-6 ${className}`}>
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-weather-text-primary text-lg font-semibold">
+    <div className={`p-6 ${className}`}>
+      <h3 className="text-weather-text-primary text-lg font-semibold my-4 ml-2 ">
           5 days Forecast
-        </h3>
-      </div>
-      
-      <div className="space-y-4">
+      </h3>
+      <div className="space-y-2 weather-card weather-card-hover">
         {dailyForecast.map((day, index) => {
           const date = new Date(day.dt * 1000);
           const dayName = index === 0 ? 'Today' : format(date, 'EEEE');
@@ -40,19 +37,19 @@ const ForecastCard = ({ forecast, className = "" }: ForecastCardProps) => {
           return (
             <div 
               key={day.dt}
-              className="grid grid-cols-3 items-center py-3 border-b border-weather-border last:border-b-0  "
+              className="grid grid-cols-3 items-center border-b border-weather-border last:border-b-0 px-5 py-1 mr-2 my-2"
             >
               {/* Weather Icon and Description */}
               <div className="flex items-center gap-2 flex-1">
                 <img 
                   src={iconUrl} 
                   alt={weather.description}
-                  className="w-14 h-14 weather-icon"
+                  className="w-16 h-16 weather-icon"
                 />
                 <div>
                   <div className="text-weather-text-primary"
                   style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" }}>
-                    <span className="text-xl font-semibold">+{Math.round(day.main.temp_max)}°/</span>
+                    <span className="text-2xl font-normal">+{Math.round(day.main.temp_max)}°/</span>
                     <span className="text-sm font-normal text-weather-text-secondary">+{Math.round(day.main.temp_min)}°</span>
                   </div>
                   
@@ -81,18 +78,19 @@ const ForecastCard = ({ forecast, className = "" }: ForecastCardProps) => {
               <img 
                 src={`https://openweathermap.org/img/wn/${dailyForecast[1].weather[0].icon}@2x.png`}
                 alt="Tomorrow weather"
-                className="w-8 h-8"
+                className="w-22 h-22"
               />
               <div>
                 <div className="text-weather-text-secondary text-sm">Tomorrow</div>
-                <div className="text-weather-text-primary text-sm font-medium">
+                <div className="text-weather-text-primary text-2xl font-medium">
                   {Math.round(dailyForecast[1].main.temp)}°C
+                </div>
+                <div className="text-weather-text-secondary text-sm flex-1">
+                  {dailyForecast[1].weather[0].description}
                 </div>
               </div>
             </div>
-            <div className="text-weather-text-secondary text-sm flex-1">
-              Thunder Storm day
-            </div>
+            
             {/* Weather trend mini chart could go here */}
             <div className="flex items-center gap-1">
               {[...Array(6)].map((_, i) => (
