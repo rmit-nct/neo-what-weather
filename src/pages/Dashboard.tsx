@@ -9,6 +9,8 @@ import {
   CurrentWeather,
   ForecastResponse,
 } from "@/services/weatherApi";
+import ForecastCard from "@/components/ForecastCard";
+import WeatherMap from "@/components/WeatherMap";
 
 const Dashboard = () => {
   const [currentWeather, setCurrentWeather] = useState<CurrentWeather | null>(
