@@ -8,7 +8,7 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="min-h-screen bg-weather-bg">
       <WeatherSidebar />
-      <main className="pl-20">
+      <main className="pl-0">
         {children}
       </main>
     </div>

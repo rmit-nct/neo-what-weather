@@ -82,36 +82,39 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-weather-bg text-white">
-      <div className="pl-5">
-        <div className="p-0">
-          {/* Header with Search */}
-          <div className="flex items-center justify-end mb-8">
-            <WeatherSearch onCitySelect={handleCitySelect} className="w-96" />
-          </div>
+      {/* Main content with proper padding and sidebar offset */}
+      <div className="ml-20 px-6 py-4">
+        {/* Header with Search */}
+        <div className="flex items-center justify-end mb-6">
+          <WeatherSearch onCitySelect={handleCitySelect} className="w-96" />
+        </div>
 
-          {currentWeather && (
-            <div className="grid gap-4 grid-cols-1 lg:grid-cols-[2fr_3fr] lg:h-[calc(100vh-12rem)]">
-              {/* Left Column: Weather + Forecast */}
-              <div className="flex flex-col gap-6">
+        {currentWeather && (
+          <div className="grid gap-6 grid-cols-1 lg:grid-cols-[1fr_2fr] h-[calc(100vh-12rem)]">
+            {/* Left Column: Weather + Forecast */}
+            <div className="flex flex-col gap-4 max-h-full">
+              <div className="flex-shrink-0">
                 <WeatherCard weather={currentWeather} />
+              </div>
+              <div className="flex-1 min-h-0">
                 {forecast && <ForecastCard forecast={forecast.list} />}
               </div>
-              {/* Right Column: Weather Metrics */}
-              <div>
-                <WeatherMetrics weather={currentWeather} />
-              </div>
             </div>
-          )}
+            {/* Right Column: Weather Metrics */}
+            <div className="min-h-0">
+              <WeatherMetrics weather={currentWeather} />
+            </div>
+          </div>
+        )}
 
-          {/* Loading overlay for searches */}
-          {isLoading && currentWeather && (
-            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-              <div className="weather-card p-6">
-                <LoadingSpinner text="Updating weather data..." />
-              </div>
+        {/* Loading overlay for searches */}
+        {isLoading && currentWeather && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="weather-card p-6">
+              <LoadingSpinner text="Updating weather data..." />
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
