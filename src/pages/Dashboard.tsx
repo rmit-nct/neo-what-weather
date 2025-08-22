@@ -97,9 +97,7 @@ const Dashboard = () => {
 
               {/* Right: Today’s Highlights */}
               <div>
-                <h2 className="text-xl font-semibold mb-4">
-                  Today's Highlight
-                </h2>
+                
                 <WeatherMetrics
                   weather={currentWeather}
                   className="grid grid-cols-2 lg:grid-cols-3 gap-6"
