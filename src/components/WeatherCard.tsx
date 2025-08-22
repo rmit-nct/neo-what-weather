@@ -30,7 +30,7 @@ const WeatherCard = ({
   return (
     <div
       className={`
-        weather-card weather-card-hover p-4 w-full
+        weather-card weather-card-hover w-full
         ${variant === "tall" ? tall : compact}
         ${className}
       `}
@@ -38,7 +38,7 @@ const WeatherCard = ({
     >
       {/* Weather Icon and Temperature */}
       <div className="flex items-center gap-2 ">
-        <div className="flex items-center gap-2 w-full pr-20 pt-6">
+        <div className="flex items-center gap-2 w-full pr-0 pt-6">
           <div className="relative">
             <img
               src={iconUrl}
@@ -58,7 +58,7 @@ const WeatherCard = ({
       </div>
 
       {/* Location and Time */}
-      <div className="p-8 text-3xl pb-72">
+      <div className="p-4 text-3xl pb-8">
         <div className="flex items-center gap-1 mt-1">
           <MapPin size={18} className="text-weather-text-secondary" />
           <span className="text-weather-text-primary font-medium text-lg">
@@ -66,7 +66,7 @@ const WeatherCard = ({
           </span>
         </div>
 
-        <div className="flex items-center gap-1 mt-1 pr-20">
+        <div className="flex items-center gap-1 mt-1 pr-0">
           <Clock size={16} className="text-weather-text-secondary" />
           <span className="text-weather-text-secondary">
             {nowLocal.toFormat("h:mm a")}

@@ -82,15 +82,15 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-weather-bg text-white">
-      <div className="pl-20">
-        <div className="p-8">
+      <div className="pl-5">
+        <div className="p-0">
           {/* Header with Search */}
           <div className="flex items-center justify-end mb-8">
             <WeatherSearch onCitySelect={handleCitySelect} className="w-96" />
           </div>
 
           {currentWeather && (
-            <div className="grid gap-6 grid-cols-1 lg:grid-cols-[2fr_3fr] lg:h-[calc(100vh-12rem)]">
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-[2fr_3fr] lg:h-[calc(100vh-12rem)]">
               {/* Left Column: Weather + Forecast */}
               <div className="flex flex-col gap-6">
                 <WeatherCard weather={currentWeather} />
