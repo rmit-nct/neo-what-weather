@@ -1,23 +1,13 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   Home, 
-  Search, 
-  MapPin, 
-  Calendar,
-  Heart,
-  Settings,
-  Bell,
-  User
+  Heart
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const sidebarItems = [
   { icon: Home, path: '/', label: 'Dashboard' },
-  { icon: Search, path: '/search', label: 'Search' },
-  { icon: MapPin, path: '/map', label: 'Map' },
-  { icon: Calendar, path: '/calendar', label: 'Calendar' },
-  { icon: Heart, path: '/favorites', label: 'Favorites' },
-  { icon: Settings, path: '/settings', label: 'Settings' },
+  { icon: Heart, path: '/favorites', label: 'Favorites' }
 ];
 
 const WeatherSidebar = () => {
@@ -25,17 +15,22 @@ const WeatherSidebar = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed left-0 top-0 h-full w-20 weather-card border-r border-weather-border z-40">
-      <div className="flex flex-col items-center py-6 h-full">
-        {/* Logo */}
-        <div className="mb-8">
-          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center weather-glow">
-            <div className="text-primary-foreground font-bold text-xl">W</div>
+    <div className="fixed inset-4 w-16 z-50 rounded-lg overflow-hidden">
+      {/* Gradient background similar to image */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/95 via-slate-500/95 to-slate-900/95" />
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/40 via-blue-300/30 to-transparent mix-blend-overlay" />
+      
+      {/* Content */}
+      <div className="relative flex flex-col items-center py-6 h-full px-2">
+        {/* Logo with enhanced styling */}
+        {<div className="mb-8">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500/90 to-blue-700/90 flex items-center justify-center shadow-xl shadow-blue-600/30 hover:shadow-blue-600/50 transition-all duration-300 transform hover:scale-105">
+            <div className="text-white font-bold text-xl">W</div>
           </div>
-        </div>
+        </div>}
 
         {/* Navigation Items */}
-        <nav className="flex flex-col gap-4 flex-1">
+        <nav className="flex flex-col gap-6 flex-1 items-center">
           {sidebarItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
@@ -45,35 +40,35 @@ const WeatherSidebar = () => {
                 key={item.path}
                 onClick={() => navigate(item.path)}
                 className={cn(
-                  "w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200",
-                  "hover:bg-primary/20 hover:scale-105",
+                  "relative w-16 h-12 flex items-center justify-center transition-all group",
                   isActive 
-                    ? "bg-primary text-primary-foreground weather-glow" 
-                    : "text-weather-text-secondary hover:text-weather-text-primary"
+                    ? "bg-gradient-to-r from-white/20 via-white/12 via-white/6 via-white/2 to-transparent text-white border-l-2 border-white"
+                    : "text-slate-300 hover:text-white"
                 )}
                 title={item.label}
               >
-                <Icon size={20} />
+                {/* Hover glow effect */}
+                <div className={cn(
+                  "absolute inset-0 transition-opacity duration-300",
+                  isActive 
+                    ? "opacity-0" 
+                    : "m-1 rounded-md bg-blue-400/20 opacity-0 group-hover:opacity-100"
+                )} />
+              
+                <Icon 
+                  size={20} 
+                  className={cn(
+                    "relative z-10",
+                    isActive ? "fill-white" : "fill-none"
+                  )}
+                />
               </button>
             );
           })}
         </nav>
 
-        {/* Bottom Items */}
-        <div className="flex flex-col gap-4">
-          <button 
-            className="w-12 h-12 rounded-xl flex items-center justify-center text-weather-text-secondary hover:text-weather-text-primary hover:bg-primary/20 transition-all duration-200"
-            title="Notifications"
-          >
-            <Bell size={20} />
-          </button>
-          <button 
-            className="w-12 h-12 rounded-xl flex items-center justify-center text-weather-text-secondary hover:text-weather-text-primary hover:bg-primary/20 transition-all duration-200"
-            title="Profile"
-          >
-            <User size={20} />
-          </button>
-        </div>
+        {/* Bottom spacing */}
+        <div className="mt-auto h-8" />
       </div>
     </div>
   );

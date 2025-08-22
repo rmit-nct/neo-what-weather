@@ -95,9 +95,8 @@ const Dashboard = () => {
                 <WeatherCard weather={currentWeather} />
               </div>
 
-              {/* Right: Today’s Highlights */}
+              {/* Right: Today's Highlights */}
               <div>
-                
                 <WeatherMetrics
                   weather={currentWeather}
                   className="grid grid-cols-2 lg:grid-cols-3 gap-6"
