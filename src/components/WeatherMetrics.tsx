@@ -191,7 +191,9 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
                   )
                 ) : metric.gauge ? (
                   <div className="h-16 w-full">
-                    <Suspense fallback={<span className="text-xs">Loading...</span>}>
+                    <Suspense
+                      fallback={<span className="text-xs">Loading...</span>}
+                    >
                       <GaugeChart
                         id={`${metric.title}-gauge`}
                         nrOfLevels={metric.gaugeColors.length * 3}
@@ -201,7 +203,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
                         textColor="#fff"
                         animate
                         formatTextValue={() => metric.value.toString()}
-                        style={{ height: '64px' }}
+                        style={{ height: "64px" }}
                       />
                     </Suspense>
                   </div>
