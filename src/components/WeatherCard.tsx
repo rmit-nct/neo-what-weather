@@ -26,14 +26,13 @@ const WeatherCard = ({
 
   const tzName = tzlookup(weather.coord.lat, weather.coord.lon);
   const nowLocal = DateTime.fromSeconds(weather.dt, { zone: tzName });
-
   return (
     <div
       className={`
-        weather-card weather-card-hover w-full p-4
-        ${variant === "tall" ? tall : compact}
-        ${className}
-      `}
+      weather-card weather-card-hover w-full h-full flex flex-col justify-between p-4
+      ${variant === "tall" ? tall : compact}
+      ${className}
+    `}
       style={{ width, maxWidth }}
     >
       {/* Weather Icon and Temperature */}
@@ -82,3 +81,4 @@ const WeatherCard = ({
 };
 
 export default WeatherCard;
+
