@@ -1,10 +1,17 @@
 import { CurrentWeather, weatherApi } from "@/services/weatherApi";
-import { Wind, Eye, Droplets, Thermometer, Sun, Sunset } from "lucide-react";
+import { Wind, Eye, Droplets, Sun, Sunset } from "lucide-react";
 import { DateTime } from "luxon";
 import tzlookup from "tz-lookup";
 import { AreaChart, Area, ResponsiveContainer, Tooltip } from "recharts";
 import { useWindForecast } from "@/hooks/useWindForecast";
 import { lazy, Suspense } from "react";
+import {
+  CircularProgressbarWithChildren,
+  buildStyles,
+} from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import RadialSeparators from "@/components/ui/RadialSeparators";
+import { Progress } from "@/components/ui/progress";
 
 const GaugeChart = lazy(() => import("react-gauge-chart"));
 
@@ -51,7 +58,6 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
     {
       title: "UV Index",
       value: uvIndex.toFixed(1),
-      unit: "UV",
       subtitle:
         uvIndex <= 2
           ? "Low"
@@ -67,18 +73,15 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
     },
     {
       title: "Sunrise & Sunset",
-      value: sunriseLocal.toFormat("h:mm a"),
-      unit: "",
-      subtitle: sunsetLocal.toFormat("h:mm a"),
+      progress: true,
+      progressPercent: sunPercent * 100,
+      sunrise: sunriseLocal.toFormat("h:mm a"),
+      sunset: sunsetLocal.toFormat("h:mm a"),
       icon: Sunset,
-      gauge: true,
-      gaugePercent: sunPercent,
-      gaugeColors: ["#FFA500", "#FFFF00"],
     },
     {
       title: "Humidity",
       value: weather.main.humidity,
-      unit: "%",
       subtitle:
         weather.main.humidity > 70
           ? "High"
@@ -86,11 +89,11 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
             ? "Normal"
             : "Low",
       icon: Droplets,
+      circular: true,
     },
     {
       title: "Visibility",
       value: Math.round(weather.visibility / 1000),
-      unit: "km",
       subtitle:
         weather.visibility > 8000
           ? "Good"
@@ -98,16 +101,9 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
             ? "Moderate"
             : "Poor",
       icon: Eye,
-    },
-    {
-      title: "Feels Like",
-      value: Math.round(weather.main.feels_like),
-      unit: "°C",
-      subtitle:
-        Math.abs(weather.main.feels_like - weather.main.temp) <= 2
-          ? "Similar to actual"
-          : "Different from actual",
-      icon: Thermometer,
+      gauge: true,
+      gaugePercent: Math.min(weather.visibility / 10000, 1), // normalize to 0–10 km
+      gaugeColors: ["#ef4444", "#facc15", "#22c55e"],
     },
   ];
 
@@ -115,7 +111,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
     <div
       className={`p-4 bg-weather-card rounded-2xl shadow-lg h-full flex flex-col ${className}`}
     >
-      <h2 className="text-lg font-semibold mb-4">Today's Highlight</h2>
+      <h2 className="text-lg text-center font-semibold mb-4">HIGHLIGHTS</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 flex-1">
         {metrics.map((metric) => {
@@ -133,8 +129,8 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
                 <Icon size={16} className="text-weather-text-secondary" />
               </div>
 
-              {/* Chart / Gauge */}
-              <div className="flex-1 flex items-center justify-center min-h-[40px]">
+              {/* Chart / Gauge / Progress */}
+              <div className="flex-1 flex flex-col items-center justify-center min-h-[60px] space-y-2">
                 {metric.chart ? (
                   loading ? (
                     <span className="text-xs text-weather-text-secondary">
@@ -145,7 +141,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
                       Failed to load wind data
                     </span>
                   ) : windData && windData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={40}>
+                    <ResponsiveContainer width="100%" height={60}>
                       <AreaChart data={windData}>
                         <defs>
                           <linearGradient
@@ -190,7 +186,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
                     </span>
                   )
                 ) : metric.gauge ? (
-                  <div className="h-16 w-full">
+                  <div className="h-24 w-full">
                     <Suspense
                       fallback={<span className="text-xs">Loading...</span>}
                     >
@@ -202,30 +198,66 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
                         arcPadding={0.02}
                         textColor="#fff"
                         animate
-                        formatTextValue={() => metric.value.toString()}
-                        style={{ height: "64px" }}
+                        formatTextValue={() =>
+                          metric.title.includes("Visibility")
+                            ? `${metric.value} km`
+                            : metric.value?.toString()
+                        }
+                        style={{ height: "96px" }}
                       />
                     </Suspense>
+                  </div>
+                ) : metric.circular ? (
+                  <div className="w-24 h-24">
+                    <CircularProgressbarWithChildren
+                      value={Number(metric.value)}
+                      strokeWidth={10}
+                      styles={buildStyles({
+                        strokeLinecap: "butt",
+                        pathColor:
+                          Number(metric.value) > 70
+                            ? "#ef4444"
+                            : Number(metric.value) > 30
+                              ? "#facc15"
+                              : "#22c55e",
+                        trailColor: "#1E293B",
+                      })}
+                    >
+                      <RadialSeparators
+                        count={12}
+                        style={{
+                          background: "#fff",
+                          width: "2px",
+                          height: "10%",
+                        }}
+                      />
+                      <div className="text-sm font-semibold text-slate-200">
+                        {metric.value}%
+                      </div>
+                    </CircularProgressbarWithChildren>
+                  </div>
+                ) : metric.progress ? (
+                  <div className="w-full">
+                    <Progress
+                      value={metric.progressPercent}
+                      className="h-3 bg-slate-800"
+                    />
+                    <div className="flex justify-between text-xs text-weather-text-secondary mt-1">
+                      <span>{metric.sunrise}</span>
+                      <span>{metric.sunset}</span>
+                    </div>
                   </div>
                 ) : null}
               </div>
 
-              {/* Value */}
-              <div className="mt-2 flex items-baseline justify-between">
-                <span className="text-lg font-semibold text-weather-text-primary">
-                  {metric.value}
-                  {metric.unit && (
-                    <span className="text-sm font-light ml-1">
-                      {metric.unit}
-                    </span>
-                  )}
-                </span>
-                {metric.subtitle && (
-                  <span className="text-xs text-weather-text-secondary">
-                    {metric.subtitle}
-                  </span>
-                )}
-              </div>
+              {/* Subtitle / Extra info */}
+              {metric.subtitle && (
+                <div className="mt-2 text-center text-xs text-weather-text-secondary">
+                  {metric.chart
+                    ? `${metric.value} ${metric.unit} | ${metric.subtitle}`
+                    : metric.subtitle}
+                </div>
+              )}
             </div>
           );
         })}
