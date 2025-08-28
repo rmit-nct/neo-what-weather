@@ -41,7 +41,7 @@ const WeatherCard = ({ weather, className = "" }: WeatherCardProps) => {
 
   return (
     <div
-      className={`p-4 bg-weather-card rounded-2xl shadow-lg lg:!h-[700px] flex-grow-0 flex flex-col ${className}`}
+      className={`p-4 bg-weather-card rounded-2xl shadow-lg lg:!h-[600px] flex-grow-0 flex flex-col ${className}`}
     >
       <h2 className="text-lg font-semibold mb-4">Current Weather</h2>
 

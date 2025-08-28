@@ -208,7 +208,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
 
   return (
     <div
-      className={`p-4 bg-weather-card rounded-2xl shadow-lg h-[75%] flex flex-col ${className}`}
+      className={`p-4 bg-weather-card rounded-2xl shadow-lg h-[600px] flex flex-col ${className}`}
     >
       <h2 className="text-lg font-semibold mb-4">Today's Highlight</h2>
 
@@ -221,7 +221,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
             <div
               key={metric.title}
               className={`min-h-[150px] bg-weather-bg rounded-xl p-4 flex flex-col justify-between shadow-md transition-all duration-300 hover:scale-[1.02] ${
-                isTopRow ? "row-span-2 h-[420px]" : ""
+                isTopRow ? "row-span-2 h-[360px]" : ""
               }`}
             >
               {/* Header */}
@@ -233,7 +233,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
               </div>
 
               {/* Chart / Gauge */}
-              <div className="flex-1 flex items-center justify-center min-h-[64px]">
+              <div className="flex-1 flex items-center justify-center min-h-[10px]">
                 {renderMetricChart(metric)}
               </div>
 

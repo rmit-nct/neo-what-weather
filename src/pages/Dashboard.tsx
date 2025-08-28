@@ -90,9 +90,9 @@ const Dashboard = () => {
         </div>
 
         {currentWeather && (
-          <div className="grid gap-6 grid-cols-1 lg:grid-cols-3 h-[calc(100vh-12rem)]">
-            {/* Left Column: Weather + Forecast */}
-            <div className="lg:col-span-1 flex flex-col h-full">
+          <div className="grid gap-6 grid-cols-1 lg:grid-cols-3 auto-rows-min">
+            {/* Left Column: Weather */}
+            <div className="lg:col-span-1 flex flex-col">
               <WeatherCard
                 weather={currentWeather}
                 className="flex-grow h-full"
@@ -103,6 +103,13 @@ const Dashboard = () => {
             <div className="lg:col-span-2 min-h-0">
               <WeatherMetrics weather={currentWeather} />
             </div>
+
+            {/* Full-width Forecast under both sections */}
+            {forecast && (
+              <div className="lg:col-span-3">
+                <ForecastCard forecast={forecast.list} />
+              </div>
+            )}
           </div>
         )}
 
