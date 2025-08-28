@@ -91,7 +91,7 @@ const Dashboard = () => {
 
         {currentWeather && (
           <div className="grid gap-6 grid-cols-1 lg:grid-cols-3 h-[calc(100vh-12rem)]">
-            {/* Left Column: Weather */}
+            {/* Left Column: Weather + Forecast */}
             <div className="lg:col-span-1 flex flex-col h-full">
               <WeatherCard
                 weather={currentWeather}
