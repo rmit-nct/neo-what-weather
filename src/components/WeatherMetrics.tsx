@@ -22,11 +22,15 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
   const { windData, loading, error } = useWindForecast(
     weather.coord.lat,
     weather.coord.lon,
-    tzName
+    tzName,
   );
 
-  const sunriseLocal = DateTime.fromSeconds(weather.sys.sunrise, { zone: tzName });
-  const sunsetLocal = DateTime.fromSeconds(weather.sys.sunset, { zone: tzName });
+  const sunriseLocal = DateTime.fromSeconds(weather.sys.sunrise, {
+    zone: tzName,
+  });
+  const sunsetLocal = DateTime.fromSeconds(weather.sys.sunset, {
+    zone: tzName,
+  });
 
   const metrics = [
     {
@@ -45,10 +49,10 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
         uvIndex <= 2
           ? "Low"
           : uvIndex <= 5
-          ? "Moderate"
-          : uvIndex <= 7
-          ? "High"
-          : "Very High",
+            ? "Moderate"
+            : uvIndex <= 7
+              ? "High"
+              : "Very High",
       icon: Sun,
       gauge: true,
       gaugeType: "uv",
@@ -63,8 +67,8 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
         weather.main.humidity > 70
           ? "High"
           : weather.main.humidity > 30
-          ? "Normal"
-          : "Low",
+            ? "Normal"
+            : "Low",
       icon: Droplets,
       gauge: true,
       gaugeType: "circular", // humidity dùng circular progressbar
@@ -84,8 +88,8 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
         weather.visibility > 8000
           ? "Good"
           : weather.visibility > 5000
-          ? "Moderate"
-          : "Poor",
+            ? "Moderate"
+            : "Poor",
       icon: Eye,
     },
     {
@@ -112,9 +116,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
       }
       if (error) {
         return (
-          <span className="text-xs text-red-400">
-            Failed to load wind data
-          </span>
+          <span className="text-xs text-red-400">Failed to load wind data</span>
         );
       }
       if (!windData || windData.length === 0) {
@@ -179,8 +181,8 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
         humidityValue > 70
           ? "#EF4444"
           : humidityValue > 40
-          ? "#FACC15"
-          : "#22C55E";
+            ? "#FACC15"
+            : "#22C55E";
 
       return (
         <div className="flex items-center justify-center">
@@ -224,7 +226,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
                 isTopRow ? "row-span-2 h-[360px]" : ""
               }`}
             >
-              {/* Header */}
+              {/* Header test */}
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-weather-text-secondary font-semibold ">
                   {metric.title}
@@ -262,4 +264,3 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
 };
 
 export default WeatherMetrics;
-
