@@ -132,7 +132,7 @@ const Favorites = () => {
 
           {/* Add Location Form */}
           {showAddForm && (
-            <div className="weather-card p-6 mb-8">
+            <div className="weather-card p-6 mb-8 relative z-[1] hover:z-10 hover:-translate-x-0.5 transition-all">
               <h3 className="text-weather-text-primary text-lg font-medium mb-4">
                 Add New Favorite Location
               </h3>
