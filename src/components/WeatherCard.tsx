@@ -15,19 +15,7 @@ const WeatherCard = ({ weather, className = "" }: WeatherCardProps) => {
   const tzName = tzlookup(weather.coord.lat, weather.coord.lon);
   const nowLocal = DateTime.fromSeconds(weather.dt, { zone: tzName });
 
-  // Nice weather images
-  const backgroundMap: Record<string, string> = {
-    Clear: "/weather-backgrounds/clear.jpg",
-    Clouds: "/weather-backgrounds/clouds.jpg",
-    Rain: "/weather-backgrounds/rain.jpg",
-    Thunderstorm: "/weather-backgrounds/storm.jpg",
-    Snow: "/weather-backgrounds/snow.jpg",
-    Mist: "/weather-backgrounds/mist.jpg",
-  };
-  const backgroundImage =
-    backgroundMap[currentWeather.main] || "/weather-backgrounds/default.jpg";
-
-  // suggest action
+  // Suggest action
   const suggestionMap: Record<string, string> = {
     Clear: "Nice weather to hang out 🌞",
     Clouds: "It's cloudy, bring a light jacket ☁️",
@@ -41,65 +29,63 @@ const WeatherCard = ({ weather, className = "" }: WeatherCardProps) => {
 
   return (
     <div
-      className={`p-4 bg-weather-card rounded-2xl shadow-lg lg:!h-[600px] flex-grow-0 flex flex-col ${className}`}
+      className={`p-4 rounded-2xl shadow-lg lg:!h-[560px] flex-grow-0 flex flex-col ${className}`}
     >
-      <h2 className="text-lg font-semibold mb-4">Current Weather</h2>
+      <h2 className="text-lg font-semibold mb-3">Current Weather</h2>
 
-      {/* content  */}
-      <div
-        className="relative rounded-xl overflow-hidden shadow-md h-[90%] flex flex-col justify-between p-4"
-        style={{
-          backgroundImage: `url(${backgroundImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        {/* Overlay to read eaiser */}
-        <div className="absolute inset-0 bg-black/40 z-0 rounded-xl" />
+      {/* Card with gradient overlays only */}
+      <div className="p-8 relative rounded-xl overflow-hidden shadow-md h-[90%] flex flex-col justify-between bg-slate-900">
+        {/* Overlays */}
+        <div className="absolute inset-0 z-0 rounded-xl">
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/95 via-slate-500/95 to-slate-900/95 rounded-xl" />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/40 via-blue-300/30 to-transparent mix-blend-overlay rounded-xl" />
+        </div>
 
-        {/* main content */}
-        <div className="relative z-10 flex items-center gap-4">
+        {/* Main content */}
+        <div className="relative z-10 flex flex-col items-start space-y-3">
           <img
             src={iconUrl}
             alt={currentWeather.description}
-            className="w-20 h-20 drop-shadow-lg"
+            className="w-32 h-32 drop-shadow-lg"
           />
           <div>
-            <div className="text-5xl font-semibold text-white/90">
-              {Math.round(weather.main.temp)}°C
+            <div className="flex items-start text-white/90">
+              <span className="text-6xl font-bold leading-none">
+                {Math.round(weather.main.temp)}
+              </span>
+              <span className="text-3xl font-medium ml-1 mt-1">°C</span>
             </div>
-            <div className="text-lg capitalize text-white/80 font-medium">
+            <div className="text-lg capitalize text-white/80 font-medium mt-1">
               {currentWeather.description}
             </div>
           </div>
         </div>
 
-        {/* sub content */}
-        <div className="relative z-10 mt-4 space-y-3 text-white text-base">
+        <hr className="relative z-10 border-t border-white/40 my-4" />
+
+        {/* Sub content */}
+        <div className="relative z-10 mt-6 space-y-3 text-white text-base">
           <div className="flex items-center gap-2">
-            <MapPin size={16} />
+            <MapPin size={18} />
             <span className="font-semibold">
               {weather.name}, {weather.sys.country}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
-            <Clock size={16} />
+            <Clock size={18} />
             <span>{nowLocal.toFormat("h:mm a")}</span>
           </div>
 
-          <div className="flex space-x-4 font-medium">
+          <div className="flex space-x-5 font-medium">
             <span>H: {Math.round(weather.main.temp_max)}°</span>
             <span>L: {Math.round(weather.main.temp_min)}°</span>
           </div>
 
           <div className="flex items-center gap-2 mt-2 text-white/90">
-            <Info size={16} />
+            <Info size={18} />
             <span>{suggestion}</span>
           </div>
-
-          {/* Suggest action */}
-          <div className="flex items-center gap-1 mt-2"></div>
         </div>
       </div>
     </div>
