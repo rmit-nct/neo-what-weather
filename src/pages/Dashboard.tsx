@@ -90,20 +90,26 @@ const Dashboard = () => {
         </div>
 
         {currentWeather && (
-          <div className="grid gap-6 grid-cols-1 lg:grid-cols-[1fr_2fr] h-[calc(100vh-12rem)]">
-            {/* Left Column: Weather + Forecast */}
-            <div className="flex flex-col gap-4 max-h-full">
-              <div className="flex-shrink-0">
-                <WeatherCard weather={currentWeather} />
-              </div>
-              <div className="flex-1 min-h-0">
-                {forecast && <ForecastCard forecast={forecast.list} />}
-              </div>
+          <div className="grid gap-6 grid-cols-1 lg:grid-cols-3 auto-rows-min">
+            {/* Left Column: Weather */}
+            <div className="lg:col-span-1 flex flex-col">
+              <WeatherCard
+                weather={currentWeather}
+                className="flex-grow h-full"
+              />
             </div>
+
             {/* Right Column: Weather Metrics */}
-            <div className="min-h-0">
+            <div className="lg:col-span-2 min-h-0">
               <WeatherMetrics weather={currentWeather} />
             </div>
+
+            {/* Full-width Forecast under both sections */}
+            {forecast && (
+              <div className="lg:col-span-3">
+                <ForecastCard forecast={forecast.list} />
+              </div>
+            )}
           </div>
         )}
 
@@ -121,4 +127,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
