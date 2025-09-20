@@ -117,7 +117,7 @@ const Dashboard = () => {
         {isLoading && currentWeather && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
             <div className="weather-card p-6">
-              <LoadingSpinner text="Updating weather data..." />
+              <LoadingSpinner text="Updating weather data..."/>
             </div>
           </div>
         )}

@@ -78,9 +78,9 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
     const arcData = createArcData();
 
     return (
-      <div className="w-full h-full flex flex-col items-center justify-center">
+      <div className="w-full h-full flex flex-col items-center justify-center gap-4">
         {/* Interactive Arc Chart - full width to reach card padding */}
-        <div className="w-full h-24 mb-6 px-2">
+        <div className="w-full h-28 sm:h-32 mb-4 px-2">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={arcData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
               <defs>
@@ -133,7 +133,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
         </div>
         
         {/* Time labels positioned closer to edges */}
-        <div className="flex justify-between items-center w-full px-1">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center w-full px-1 gap-4">
           <div className="text-center group cursor-pointer hover:scale-105 transition-transform">
             <div className="w-8 h-8 mx-auto mb-1 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
               <div className="w-3 h-3 bg-white rounded-full"></div>
@@ -156,7 +156,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
         </div>
         
         {/* Progress indicator moved down with full width */}
-        <div className="w-full mt-6 px-1">
+        <div className="w-full mt-2 sm:mt-4 px-1">
           <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
             <span>Daylight Progress</span>
             <span>{Math.round(sunProgress * 100)}%</span>
@@ -177,7 +177,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
       title: "Wind Status",
       value: Math.round(weather.wind.speed * 3.6),
       unit: "km/h",
-      subtitle: `${weather.wind.deg}°`,
+      subtitle: `${weather.wind.deg}\u00B0`,
       icon: Wind,
       chart: true,
       gradient: {
@@ -254,7 +254,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
     {
       title: "Feels Like",
       value: Math.round(weather.main.feels_like),
-      unit: "°C",
+      unit: "\u00B0C",
       subtitle:
         Math.abs(weather.main.feels_like - weather.main.temp) <= 2
           ? "Similar to actual"
@@ -330,7 +330,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
             textColor="#fff"
             animate
             formatTextValue={() => metric.value.toString()}
-            style={{ height: "64px" }}
+            style={{ width: "100%", maxWidth: "260px", height: "120px" }}
           />
         </Suspense>
       );
@@ -345,11 +345,11 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
 
   return (
     <div
-      className={`p-4 bg-weather-card rounded-2xl shadow-lg h-[600px] flex flex-col ${className}`}
+      className={`p-4 bg-weather-card rounded-2xl shadow-lg flex flex-col lg:min-h-[560px] ${className}`}
     >
       <h2 className="text-lg font-semibold mb-4">Today's Highlight</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 grid-rows-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 xl:auto-rows-[minmax(180px,1fr)]">
         {metrics.map((metric, index) => {
           const Icon = metric.icon;
           const isTopRow = index < 3;
@@ -357,8 +357,8 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
           return (
             <div
               key={metric.title}
-              className={`relative min-h-[150px] rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:scale-[1.02] ${
-                isTopRow ? "row-span-2 h-[360px]" : ""
+              className={`relative flex flex-col min-h-[170px] rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:scale-[1.02] ${
+                isTopRow ? "xl:row-span-2 xl:min-h-[320px]" : ""
               }`}
             >
               {/* Gradient backgrounds */}
@@ -376,7 +376,7 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
                 </div>
 
                 {/* Chart / Gauge / Sun Arc */}
-                <div className="flex-1 flex items-center justify-center min-h-[10px]">
+                <div className="flex-1 flex items-center justify-center min-h-[10px] w-full">
                   {renderMetricChart(metric)}
                 </div>
 

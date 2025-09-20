@@ -1,5 +1,5 @@
 import { ForecastDay } from "@/services/weatherApi";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 
 interface ForecastCardProps {
   forecast: ForecastDay[];
@@ -7,21 +7,57 @@ interface ForecastCardProps {
 }
 
 const ForecastCard = ({ forecast, className = "" }: ForecastCardProps) => {
-  // Group forecast by days and take first entry of each day for 5-day forecast
-  const dailyForecast = forecast
-    .reduce((acc: ForecastDay[], current) => {
-      const currentDate = format(new Date(current.dt * 1000), "yyyy-MM-dd");
-      const existingDay = acc.find(
-        (item) =>
-          format(new Date(item.dt * 1000), "yyyy-MM-dd") === currentDate,
-      );
+  // Aggregate 3-hour forecast entries into daily summaries for the next five days
+  type DailySummary = {
+    dateKey: string;
+    timestamp: number;
+    maxTemp: number;
+    minTemp: number;
+    avgTemp: number;
+    icon: string;
+    description: string;
+  };
 
-      if (!existingDay) {
-        acc.push(current);
-      }
+  const groupedByDay = forecast.reduce<Record<string, ForecastDay[]>>((acc, entry) => {
+    const dateKey = entry.dt_txt.split(" ")[0];
+    if (!acc[dateKey]) {
+      acc[dateKey] = [];
+    }
+    acc[dateKey].push(entry);
+    return acc;
+  }, {});
 
-      return acc;
-    }, [])
+  const dailyForecast: DailySummary[] = Object.entries(groupedByDay)
+    .map(([dateKey, entries]) => {
+      const sortedEntries = [...entries].sort((a, b) => a.dt - b.dt);
+      const maxTemp = Math.max(...sortedEntries.map((entry) => entry.main.temp_max));
+      const minTemp = Math.min(...sortedEntries.map((entry) => entry.main.temp_min));
+      const avgTemp =
+        sortedEntries.reduce((sum, entry) => sum + entry.main.temp, 0) / sortedEntries.length;
+      const getHour = (value: ForecastDay) =>
+        parseInt(value.dt_txt.split(" ")[1].split(":")[0], 10);
+      const representativeEntry = sortedEntries.reduce((closest, entry) => {
+        const currentDiff = Math.abs(getHour(entry) - 12);
+        const closestDiff = Math.abs(getHour(closest) - 12);
+
+        if (currentDiff === closestDiff) {
+          return getHour(entry) >= 12 ? entry : closest;
+        }
+
+        return currentDiff < closestDiff ? entry : closest;
+      }, sortedEntries[0]);
+
+      return {
+        dateKey,
+        timestamp: sortedEntries[0].dt * 1000,
+        maxTemp,
+        minTemp,
+        avgTemp,
+        icon: representativeEntry.weather[0].icon,
+        description: representativeEntry.weather[0].description,
+      };
+    })
+    .sort((a, b) => a.timestamp - b.timestamp)
     .slice(0, 5);
 
   return (
@@ -38,44 +74,43 @@ const ForecastCard = ({ forecast, className = "" }: ForecastCardProps) => {
         {/* Content */}
         <div className="relative z-10 space-y-3">
           {dailyForecast.map((day, index) => {
-            const date = new Date(day.dt * 1000);
+            const date = parseISO(day.dateKey);
             const dayName = index === 0 ? "Today" : format(date, "EEE");
             const dateString = format(date, "dd MMM");
-            const weather = day.weather[0];
-            const iconUrl = `https://openweathermap.org/img/wn/${weather.icon}.png`;
+            const iconUrl = `https://openweathermap.org/img/wn/${day.icon}.png`;
 
             return (
               <div
-                key={day.dt}
-                className="grid grid-cols-3 items-center py-3 px-3 rounded-xl bg-slate-800/40 backdrop-blur-sm border border-gray-700/30"
+                key={day.dateKey}
+                className="flex flex-col gap-3 sm:grid sm:grid-cols-3 sm:items-center py-3 px-3 rounded-xl bg-slate-800/40 backdrop-blur-sm border border-gray-700/30"
               >
                 {/* Weather Icon + Temp + Desc */}
                 <div className="flex items-center gap-3 w-full">
                   <img
                     src={iconUrl}
-                    alt={weather.description}
+                    alt={day.description}
                     className="w-12 h-12 weather-icon flex-shrink-0"
                   />
                   <div className="min-w-0 flex-1">
                     <div className="text-white text-base font-semibold leading-tight">
-                      {Math.round(day.main.temp_max)}° /{" "}
+                      {Math.round(day.maxTemp)}{" "}
                       <span className="text-gray-300 font-medium">
-                        {Math.round(day.main.temp_min)}°
+                        {Math.round(day.minTemp)}
                       </span>
                     </div>
                     <div className="text-gray-300 text-sm leading-relaxed capitalize mt-1">
-                      {weather.description}
+                      {day.description}
                     </div>
                   </div>
                 </div>
 
                 {/* Day */}
-                <div className="text-center text-white font-semibold text-base">
+                <div className="text-white font-semibold text-base text-center sm:text-left">
                   {dayName}
                 </div>
 
                 {/* Date */}
-                <div className="text-right text-gray-300 text-sm font-medium">
+                <div className="text-gray-300 text-sm font-medium text-left sm:text-right w-full">
                   {dateString}
                 </div>
               </div>
@@ -87,7 +122,7 @@ const ForecastCard = ({ forecast, className = "" }: ForecastCardProps) => {
             <div className="mt-4 pt-4 border-t border-gray-600/50">
               <div className="flex items-center gap-4 bg-slate-800/30 rounded-xl p-4">
                 <img
-                  src={`https://openweathermap.org/img/wn/${dailyForecast[1].weather[0].icon}.png`}
+                  src={`https://openweathermap.org/img/wn/${dailyForecast[1].icon}.png`}
                   alt="Tomorrow weather"
                   className="w-14 h-14 flex-shrink-0"
                 />
@@ -96,10 +131,10 @@ const ForecastCard = ({ forecast, className = "" }: ForecastCardProps) => {
                     Tomorrow's Highlight
                   </div>
                   <div className="text-white text-xl font-bold">
-                    {Math.round(dailyForecast[1].main.temp)}°C
+                    {Math.round(dailyForecast[1].avgTemp)}
                   </div>
                   <div className="text-gray-300 text-sm capitalize mt-1">
-                    {dailyForecast[1].weather[0].description}
+                    {dailyForecast[1].description}
                   </div>
                 </div>
 
