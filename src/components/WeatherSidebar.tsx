@@ -22,12 +22,16 @@ const WeatherSidebar = () => {
       
       {/* Content */}
       <div className="relative flex flex-col items-center py-6 h-full px-2">
-        {/* Logo with enhanced styling */}
-        {<div className="mb-8">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500/90 to-blue-700/90 flex items-center justify-center shadow-xl shadow-blue-600/30 hover:shadow-blue-600/50 transition-all duration-300 transform hover:scale-105">
-            <div className="text-white font-bold text-xl">W</div>
+        {/* NCT Logo */}
+        <div className="mb-8">
+          <div className="w-20 h-20 flex items-center justify-center transition-all duration-300 transform hover:scale-105">
+            <img 
+              src="/NCT - LOGO 2 - NBG.png" 
+              alt="NCT Logo" 
+              className="w-20 h-20 object-contain"
+            />
           </div>
-        </div>}
+        </div>
 
         {/* Navigation Items */}
         <nav className="flex flex-col gap-6 flex-1 items-center">

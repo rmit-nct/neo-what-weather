@@ -82,36 +82,74 @@ const ForecastCard = ({ forecast, className = "" }: ForecastCardProps) => {
             return (
               <div
                 key={day.dateKey}
-                className="flex flex-col gap-3 sm:grid sm:grid-cols-3 sm:items-center py-3 px-3 rounded-xl bg-slate-800/40 backdrop-blur-sm border border-gray-700/30"
+                className="py-3 px-3 rounded-xl bg-slate-800/40 backdrop-blur-sm border border-gray-700/30"
               >
-                {/* Weather Icon + Temp + Desc */}
-                <div className="flex items-center gap-3 w-full">
-                  <img
-                    src={iconUrl}
-                    alt={day.description}
-                    className="w-12 h-12 weather-icon flex-shrink-0"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <div className="text-white text-base font-semibold leading-tight">
-                      {Math.round(day.maxTemp)}{" "}
-                      <span className="text-gray-300 font-medium">
-                        {Math.round(day.minTemp)}
-                      </span>
+                {/* Mobile Layout: Stack everything vertically */}
+                <div className="flex flex-col gap-3 sm:hidden">
+                  {/* Day and Date Row */}
+                  <div className="flex justify-between items-center">
+                    <div className="text-white font-semibold text-base">
+                      {dayName}
                     </div>
-                    <div className="text-gray-300 text-sm leading-relaxed capitalize mt-1">
-                      {day.description}
+                    <div className="text-gray-300 text-sm font-medium">
+                      {dateString}
+                    </div>
+                  </div>
+                  
+                  {/* Weather Icon + Temp + Description Row */}
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={iconUrl}
+                      alt={day.description}
+                      className="w-12 h-12 weather-icon flex-shrink-0"
+                    />
+                    <div className="flex-1">
+                      <div className="text-white text-base font-semibold leading-tight">
+                        <span className="text-orange-400 text-xs font-medium">H:</span> {Math.round(day.maxTemp)}°{" "}
+                        <span className="text-cyan-400 text-xs font-medium">L:</span>{" "}
+                        <span className="text-gray-300 font-medium">
+                          {Math.round(day.minTemp)}°
+                        </span>
+                      </div>
+                      <div className="text-gray-300 text-sm leading-relaxed capitalize mt-1">
+                        {day.description}
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Day */}
-                <div className="text-white font-semibold text-base text-center sm:text-left">
-                  {dayName}
-                </div>
+                {/* Desktop Layout: Grid layout for larger screens */}
+                <div className="hidden sm:grid sm:grid-cols-3 sm:items-center sm:gap-4">
+                  {/* Weather Icon + Temp + Desc */}
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={iconUrl}
+                      alt={day.description}
+                      className="w-12 h-12 weather-icon flex-shrink-0"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="text-white text-base font-semibold leading-tight">
+                        <span className="text-orange-400 text-xs font-medium">H:</span> {Math.round(day.maxTemp)}°{" "}
+                        <span className="text-cyan-400 text-xs font-medium">L:</span>{" "}
+                        <span className="text-gray-300 font-medium">
+                          {Math.round(day.minTemp)}°
+                        </span>
+                      </div>
+                      <div className="text-gray-300 text-sm leading-relaxed capitalize mt-1">
+                        {day.description}
+                      </div>
+                    </div>
+                  </div>
 
-                {/* Date */}
-                <div className="text-gray-300 text-sm font-medium text-left sm:text-right w-full">
-                  {dateString}
+                  {/* Day */}
+                  <div className="text-white font-semibold text-base text-center">
+                    {dayName}
+                  </div>
+
+                  {/* Date */}
+                  <div className="text-gray-300 text-sm font-medium text-right">
+                    {dateString}
+                  </div>
                 </div>
               </div>
             );

@@ -41,65 +41,78 @@ const WeatherCard = ({ weather, className = "" }: WeatherCardProps) => {
 
   return (
     <div
-      className={`p-4 bg-weather-card rounded-2xl shadow-lg lg:!h-[600px] flex-grow-0 flex flex-col ${className}`}
+      className={`relative p-4 rounded-2xl shadow-lg lg:!h-[600px] flex-grow-0 flex flex-col overflow-hidden ${className}`}
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
-      <h2 className="text-lg font-semibold mb-4">Current Weather</h2>
+      {/* Overlay for better text readability */}
+      <div className="absolute inset-0 bg-black/40 z-0" />
 
-      {/* content  */}
-      <div
-        className="relative rounded-xl overflow-hidden shadow-md h-[90%] flex flex-col justify-between p-4"
-        style={{
-          backgroundImage: `url(${backgroundImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        {/* Overlay to read eaiser */}
-        <div className="absolute inset-0 bg-black/40 z-0 rounded-xl" />
+      <div className="relative z-10">
+        <h2 className="text-lg font-semibold mb-4 text-white">Current Weather</h2>
 
-        {/* main content */}
-        <div className="relative z-10 flex items-center gap-4">
-          <img
-            src={iconUrl}
-            alt={currentWeather.description}
-            className="w-20 h-20 drop-shadow-lg"
-          />
-          <div>
-            <div className="text-5xl font-semibold text-white/90">
-              {Math.round(weather.main.temp)}°C
+        {/* content  */}
+        <div className="rounded-xl h-[90%] flex flex-col justify-center p-4">
+          {/* Major content - Weather icon, temperature, and condition */}
+          <div className="mb-6">
+            {/* Weather icon - much bigger */}
+            <div className="">
+              <img
+                src={iconUrl}
+                alt={currentWeather.description}
+                className="w-40 h-40 drop-shadow-lg"
+              />
             </div>
-            <div className="text-lg capitalize text-white/80 font-medium">
-              {currentWeather.description}
+
+            {/* Main temperature - left aligned */}
+            <div className="mb-4">
+              <div className="text-7xl font-bold text-white">
+                {Math.round(weather.main.temp)}°C
+              </div>
+            </div>
+
+            {/* Weather condition */}
+            <div className="mb-6">
+              <div className="text-xl capitalize text-white/90 font-medium">
+                {currentWeather.description}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* sub content */}
-        <div className="relative z-10 mt-4 space-y-3 text-white text-base">
-          <div className="flex items-center gap-2">
-            <MapPin size={16} />
-            <span className="font-semibold">
-              {weather.name}, {weather.sys.country}
-            </span>
+          {/* Light separation line */}
+          <div className="border-t border-white/20 mb-6"></div>
+
+          {/* Minor content - Location, time, and additional info */}
+          <div className="space-y-4">
+            {/* Location */}
+            <div className="flex items-center gap-2 text-white text-lg">
+              <MapPin size={18} />
+              <span className="font-semibold">
+                {weather.name}, {weather.sys.country}
+              </span>
+            </div>
+
+            {/* Time */}
+            <div className="flex items-center gap-2 text-white/80 text-base">
+              <Clock size={16} />
+              <span>{nowLocal.toFormat("h:mm a")}</span>
+            </div>
+
+            {/* High/Low temperatures */}
+            <div className="flex space-x-6 font-medium text-white/80">
+              <span>H: {Math.round(weather.main.temp_max)}°</span>
+              <span>L: {Math.round(weather.main.temp_min)}°</span>
+            </div>
+
+            {/* Suggestion */}
+            <div className="flex items-start gap-2 text-white/90">
+              <Info size={16} className="mt-0.5 flex-shrink-0" />
+              <span className="text-sm">{suggestion}</span>
+            </div>
           </div>
-
-          <div className="flex items-center gap-2">
-            <Clock size={16} />
-            <span>{nowLocal.toFormat("h:mm a")}</span>
-          </div>
-
-          <div className="flex space-x-4 font-medium">
-            <span>H: {Math.round(weather.main.temp_max)}°</span>
-            <span>L: {Math.round(weather.main.temp_min)}°</span>
-          </div>
-
-          <div className="flex items-center gap-2 mt-2 text-white/90">
-            <Info size={16} />
-            <span>{suggestion}</span>
-          </div>
-
-          {/* Suggest action */}
-          <div className="flex items-center gap-1 mt-2"></div>
         </div>
       </div>
     </div>

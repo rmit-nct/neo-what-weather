@@ -123,7 +123,7 @@ const Favorites = () => {
             <Button
               onClick={() => setShowAddForm(!showAddForm)}
               variant="outline"
-              className="bg-transparent border-weather-border text-weather-text-primary hover:bg-primary/10"
+              className="bg-transparent border-weather-border text-white hover:bg-primary/10 hover:text-white"
             >
               <Plus size={16} className="mr-2" />
               Add Location

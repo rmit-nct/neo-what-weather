@@ -345,11 +345,11 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
 
   return (
     <div
-      className={`p-4 bg-weather-card rounded-2xl shadow-lg flex flex-col lg:min-h-[560px] ${className}`}
+      className={`p-4 bg-weather-card rounded-2xl shadow-lg flex flex-col lg:!h-[600px] ${className}`}
     >
       <h2 className="text-lg font-semibold mb-4">Today's Highlight</h2>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 xl:auto-rows-[minmax(180px,1fr)]">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3 xl:grid-rows-2 flex-1 overflow-hidden">
         {metrics.map((metric, index) => {
           const Icon = metric.icon;
           const isTopRow = index < 3;
@@ -357,8 +357,10 @@ const WeatherMetrics = ({ weather, className = "" }: WeatherMetricsProps) => {
           return (
             <div
               key={metric.title}
-              className={`relative flex flex-col min-h-[170px] rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:scale-[1.02] ${
-                isTopRow ? "xl:row-span-2 xl:min-h-[320px]" : ""
+              className={`relative flex flex-col rounded-xl overflow-hidden shadow-md transition-all duration-300 hover:scale-[1.02] ${
+                isTopRow 
+                  ? "xl:row-span-2 min-h-[170px] xl:min-h-0" 
+                  : "min-h-[140px] xl:min-h-0"
               }`}
             >
               {/* Gradient backgrounds */}
