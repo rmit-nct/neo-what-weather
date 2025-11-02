@@ -49,5 +49,10 @@ VITE_API_KEY = <YOUR_OPEN_WEATHER_API_KEY>
 npm run dev
 ```
 ## 🤝 Contributing
-This project is maintained by RMIT NCT. Contributions can be viewed through this link:
-https://rmiteduau.sharepoint.com/:x:/r/sites/NCT-NeoCultureTechClubCoreTeam/_layouts/15/Doc.aspx?sourcedoc=%7BE22986DC-73BD-4F58-9A0C-B130D89FE30B%7D&file=WhatWeather_Weekly_Report.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&wdOrigin=WAC.EXCEL.HOME-BUTTON%2CAPPHOME-WEB.FILEBROWSER.RECENT&wdPreviousSession=6454c91e-dc87-65ae-dd53-070898cee669&wdPreviousSessionSrc=Wac&ct=1758468282106
+| Name            | Task                                                                                           | Contribution | Notes |
+|-----------------|------------------------------------------------------------------------------------------------|---------------|-------|
+| Đào Tiến Dũng   | Implement five days forecast card + resolve conflicts for final merge                          | 25%           | Done  |
+| Huỳnh Tấn Phúc  | Implement current weather card + responsive for favorite page                                  | 25%           | Done  |
+| Minh Đạt        | Implement Today's highlight card + edit current weather card                                   | 25%           | Done  |
+| Võ Minh Khôi    | Implement project's structure and sidebar, review PR and add micro UX + responsiveness         | 25%           | Done  |
+
