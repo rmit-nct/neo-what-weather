@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 // Demo mode - set to false to use real API calls
-const DEMO_MODE = false;
-// Fixed to use VITE_ prefix
-const API_KEY = import.meta.env.VITE_OPEN_WEATHER_API_KEY || ''; // Replace with your actual API key if not using env
+// Automatically enable demo mode if API key is not configured
+const API_KEY = import.meta.env.VITE_OPEN_WEATHER_API_KEY || '';
+const DEMO_MODE = !API_KEY; // Use demo mode if no API key is provided
 const BASE_URL = 'https://api.openweathermap.org/data/2.5';
 const GEO_URL = 'https://api.openweathermap.org/geo/1.0';
 
@@ -117,6 +117,9 @@ class WeatherApiService {
     }
 
     try {
+      if (!API_KEY) {
+        throw new Error('API key not configured. Please set VITE_OPEN_WEATHER_API_KEY environment variable.');
+      }
       const response = await axios.get(`${BASE_URL}/weather`, {
         params: {
           q: city,
@@ -125,8 +128,13 @@ class WeatherApiService {
         }
       });
       return response.data;
-    } catch (error) {
-      throw new Error('City not found or API error');
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        throw new Error(`City "${city}" not found. Please check the spelling and try again.`);
+      } else if (error.response?.status === 401) {
+        throw new Error('Invalid API key. Please check your OpenWeatherMap API key.');
+      }
+      throw new Error(error.message || 'Failed to fetch weather data');
     }
   }
 
@@ -138,6 +146,9 @@ class WeatherApiService {
     }
 
     try {
+      if (!API_KEY) {
+        throw new Error('API key not configured. Please set VITE_OPEN_WEATHER_API_KEY environment variable.');
+      }
       const response = await axios.get(`${BASE_URL}/weather`, {
         params: {
           lat,
@@ -147,8 +158,11 @@ class WeatherApiService {
         }
       });
       return response.data;
-    } catch (error) {
-      throw new Error('Weather data not available');
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        throw new Error('Invalid API key. Please check your OpenWeatherMap API key.');
+      }
+      throw new Error(error.message || 'Failed to fetch weather data');
     }
   }
 
@@ -160,6 +174,9 @@ class WeatherApiService {
     }
 
     try {
+      if (!API_KEY) {
+        throw new Error('API key not configured. Please set VITE_OPEN_WEATHER_API_KEY environment variable.');
+      }
       const response = await axios.get(`${BASE_URL}/forecast`, {
         params: {
           q: city,
@@ -168,8 +185,13 @@ class WeatherApiService {
         }
       });
       return response.data;
-    } catch (error) {
-      throw new Error('Forecast data not available');
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        throw new Error(`City "${city}" not found. Please check the spelling and try again.`);
+      } else if (error.response?.status === 401) {
+        throw new Error('Invalid API key. Please check your OpenWeatherMap API key.');
+      }
+      throw new Error(error.message || 'Failed to fetch forecast data');
     }
   }
 
@@ -181,6 +203,9 @@ class WeatherApiService {
     }
 
     try {
+      if (!API_KEY) {
+        throw new Error('API key not configured. Please set VITE_OPEN_WEATHER_API_KEY environment variable.');
+      }
       const response = await axios.get(`${BASE_URL}/forecast`, {
         params: {
           lat,
@@ -190,8 +215,11 @@ class WeatherApiService {
         }
       });
       return response.data;
-    } catch (error) {
-      throw new Error('Forecast data not available');
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        throw new Error('Invalid API key. Please check your OpenWeatherMap API key.');
+      }
+      throw new Error(error.message || 'Failed to fetch forecast data');
     }
   }
 

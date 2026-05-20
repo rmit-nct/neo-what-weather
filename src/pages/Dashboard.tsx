@@ -29,11 +29,11 @@ const Dashboard = () => {
       ]);
       setCurrentWeather(weatherData);
       setForecast(forecastData);
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error?.message || 'Failed to fetch weather data. Please check the city name and try again.';
       toast({
         title: "Error",
-        description:
-          "Failed to fetch weather data. Please check the city name and try again.",
+        description: errorMessage,
         variant: "destructive",
       });
       console.error("Weather fetch error:", error);
